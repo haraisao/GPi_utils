@@ -1,0 +1,9 @@
+[Unit]
+Description=Joystick event for GPi Case
+
+[Service]
+Type=simple
+ExecStart=/opt/local/bin/gpi_handler
+
+[Install]
+WantedBy=multi-user.target

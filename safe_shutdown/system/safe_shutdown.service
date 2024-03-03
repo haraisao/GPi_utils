@@ -1,0 +1,10 @@
+[Unit]
+Description=Safe shutdown...
+
+[Service]
+Type=simple
+ExecStart=/opt/local/bin/safe_shutdown.sh
+Restert=always
+
+[Install]
+WantedBy=multi-user.target
