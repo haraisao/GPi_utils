@@ -6,6 +6,9 @@
 #include <vector>
 #include <cstdio>
 #include <cmath>
+#include <chrono>
+#include <future>
+#include <thread>
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -29,6 +32,12 @@
 #define FLAG_BTN 	8
 
 
+using namespace std::chrono_literals;
+
+
+/*
+ *
+ */
 class JoyStick
 {
 public:
@@ -151,6 +160,10 @@ private:
 };
 
 
+int gpi_callback() {
+  system("/opt/local/bin/gpi_callback.sh"); 
+  return 0;
+}
 /*
  *
  */
@@ -159,6 +172,8 @@ int
 main(int argc, char **argv) {
   std::vector<int> Hotkey0{ LB_BTN, SELECT_BTN };
   std::vector<int> Hotkey1{ LB_BTN, FLAG_BTN };
+
+  std::future<int> ft;
 
   auto js = JoyStick(JOY_DEV);
 
@@ -174,7 +189,16 @@ main(int argc, char **argv) {
 
     /*** Call external command **/
     if (js.chk_button(Hotkey0)) {
-      system("/opt/local/bin/gpi_callback.sh"); 
+      try{
+        auto status = ft.wait_for(0ms);
+        if(status == std::future_status::ready){
+          ft = std::async(gpi_callback);
+        }else{
+         std::cout << "Skip..." << std::endl;
+	}
+      }catch(...){
+        ft = std::async(gpi_callback);
+      }
     }
     
     /*

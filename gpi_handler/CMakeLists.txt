@@ -4,4 +4,5 @@ project(gpi_handler CXX)
 
 add_executable(${PROJECT_NAME}
        	src/gpi_handler.cpp)
+target_link_libraries(${PROJECT_NAME} pthread)
 
